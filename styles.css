@@ -370,7 +370,8 @@ select:focus {
 .day-cell.trained {
   border-color: rgba(15, 118, 110, 0.62);
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.2) 0%, transparent 34%),
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.35), transparent 18%),
+    radial-gradient(circle at 78% 74%, rgba(252, 211, 77, 0.72), transparent 34%),
     linear-gradient(145deg, #0f766e 0%, #0d9488 56%, #b8872f 100%);
   color: white;
   box-shadow:
@@ -381,28 +382,29 @@ select:focus {
 
 .day-cell.trained::before {
   position: absolute;
-  left: -12%;
-  right: -12%;
-  bottom: -18%;
-  height: 48%;
+  left: -16%;
+  right: -16%;
+  bottom: -22%;
+  height: 54%;
   content: "";
-  background: rgba(22, 32, 31, 0.18);
+  background: rgba(22, 32, 31, 0.2);
   border-radius: 999px 999px 0 0;
 }
 
 .day-cell.trained::after {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
   display: grid;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   place-items: center;
   border-radius: 50%;
   background: rgba(255, 250, 240, 0.94);
   color: var(--accent-strong);
   content: "✓";
-  font-size: 13px;
+  font-size: 10px;
   line-height: 1;
   text-shadow: none;
 }
@@ -414,21 +416,21 @@ select:focus {
 }
 
 .day-cell.trained .day-number {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .day-badge {
   position: absolute;
-  right: 7px;
-  bottom: 7px;
-  left: 7px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 1;
-  min-height: 20px;
-  padding: 4px 5px;
-  border-radius: 999px;
-  background: rgba(22, 32, 31, 0.5);
+  min-height: 18px;
+  padding: 4px 2px 3px;
+  border-radius: 0;
+  background: transparent;
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
   opacity: 0;
   text-align: center;
@@ -579,24 +581,25 @@ select:focus {
   }
 
   .day-cell.trained .day-number {
-    font-size: 20px;
-  }
-
-  .day-cell.trained::after {
-    top: 5px;
-    right: 5px;
-    width: 16px;
-    height: 16px;
-    font-size: 11px;
+    font-size: 17px;
   }
 
   .day-badge {
-    right: 5px;
-    bottom: 5px;
-    left: 5px;
-    min-height: 17px;
-    padding: 3px 4px;
+    min-height: 16px;
+    padding: 3px 1px 2px;
     font-size: 10px;
+  }
+
+  .day-cell.trained::before {
+    height: 52%;
+  }
+
+  .day-cell.trained::after {
+    top: 3px;
+    right: 3px;
+    width: 12px;
+    height: 12px;
+    font-size: 9px;
   }
 
   .history-panel {
