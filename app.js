@@ -326,7 +326,6 @@ function renderCalendar() {
     cell.className = "day-cell";
     cell.innerHTML = `
       <span class="day-number">${day}</span>
-      <span class="day-spark" aria-hidden="true"></span>
       <span class="day-badge">${stats.sets ? `${stats.sets}组` : ""}</span>
     `;
     if (trainedDates.has(dateKey)) {

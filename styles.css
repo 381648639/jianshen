@@ -326,7 +326,7 @@ select:focus {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
+  gap: 8px;
 }
 
 .weekday-row {
@@ -338,14 +338,17 @@ select:focus {
 
 .day-cell {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 250, 240, 0.75);
   color: var(--ink);
+  padding: 10px;
   font-weight: 800;
+  line-height: 1;
   overflow: hidden;
   transition:
     transform 0.18s ease,
@@ -365,39 +368,41 @@ select:focus {
 }
 
 .day-cell.trained {
-  border-color: rgba(13, 148, 136, 0.72);
+  border-color: rgba(15, 118, 110, 0.62);
   background:
-    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.45), transparent 18%),
-    radial-gradient(circle at 72% 70%, rgba(252, 211, 77, 0.78), transparent 30%),
-    linear-gradient(145deg, #0f766e 0%, #0d9488 48%, #b3541e 100%);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.2) 0%, transparent 34%),
+    linear-gradient(145deg, #0f766e 0%, #0d9488 56%, #b8872f 100%);
   color: white;
   box-shadow:
-    0 16px 34px rgba(15, 118, 110, 0.32),
-    0 0 0 4px rgba(15, 118, 110, 0.12);
-  text-shadow: 0 1px 2px rgba(22, 32, 31, 0.35);
+    0 10px 22px rgba(15, 118, 110, 0.24),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  text-shadow: 0 1px 1px rgba(22, 32, 31, 0.28);
 }
 
 .day-cell.trained::before {
   position: absolute;
-  inset: -42%;
+  left: -12%;
+  right: -12%;
+  bottom: -18%;
+  height: 48%;
   content: "";
-  background: linear-gradient(115deg, transparent 36%, rgba(255, 255, 255, 0.44) 48%, transparent 60%);
-  transform: rotate(12deg);
+  background: rgba(22, 32, 31, 0.18);
+  border-radius: 999px 999px 0 0;
 }
 
 .day-cell.trained::after {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 7px;
+  right: 7px;
   display: grid;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   place-items: center;
   border-radius: 50%;
   background: rgba(255, 250, 240, 0.94);
   color: var(--accent-strong);
   content: "✓";
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   text-shadow: none;
 }
@@ -409,36 +414,26 @@ select:focus {
 }
 
 .day-cell.trained .day-number {
-  font-size: clamp(20px, 2.2vw, 28px);
-}
-
-.day-spark {
-  position: absolute;
-  z-index: 0;
-  width: 54%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  transform: scale(0);
-}
-
-.day-cell.trained .day-spark {
-  animation: trained-pulse 2.6s ease-in-out infinite;
+  font-size: 22px;
 }
 
 .day-badge {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
+  right: 7px;
+  bottom: 7px;
+  left: 7px;
   z-index: 1;
-  min-height: 22px;
-  padding: 4px 7px;
+  min-height: 20px;
+  padding: 4px 5px;
   border-radius: 999px;
-  background: rgba(22, 32, 31, 0.62);
+  background: rgba(22, 32, 31, 0.5);
   color: white;
   font-size: 12px;
   line-height: 1;
   opacity: 0;
+  text-align: center;
+  text-shadow: none;
+  white-space: nowrap;
 }
 
 .day-cell.trained .day-badge {
@@ -446,32 +441,20 @@ select:focus {
 }
 
 .day-cell.selected {
-  outline: 3px solid rgba(179, 84, 30, 0.42);
-  outline-offset: 3px;
+  outline: 2px solid rgba(179, 84, 30, 0.5);
+  outline-offset: 2px;
 }
 
 .day-cell.trained.selected {
   box-shadow:
-    0 16px 34px rgba(15, 118, 110, 0.34),
-    0 0 0 4px rgba(179, 84, 30, 0.22),
-    0 0 28px rgba(252, 211, 77, 0.42);
-}
-
-@keyframes trained-pulse {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(0.64);
-  }
-
-  50% {
-    opacity: 0.55;
-    transform: scale(1.28);
-  }
+    0 12px 26px rgba(15, 118, 110, 0.28),
+    0 0 0 3px rgba(179, 84, 30, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
 }
 
 .history-panel {
   margin-top: 12px;
+  margin-bottom: 18px;
   padding: 14px;
 }
 
@@ -580,6 +563,44 @@ select:focus {
   .quick-add,
   .library-form {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .calendar-grid {
+    gap: 6px;
+  }
+
+  .day-cell {
+    padding: 7px;
+    border-radius: 8px;
+  }
+
+  .day-number {
+    font-size: 17px;
+  }
+
+  .day-cell.trained .day-number {
+    font-size: 20px;
+  }
+
+  .day-cell.trained::after {
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
+  }
+
+  .day-badge {
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    min-height: 17px;
+    padding: 3px 4px;
+    font-size: 10px;
+  }
+
+  .history-panel {
+    margin-bottom: 28px;
   }
 
   .field.wide,
