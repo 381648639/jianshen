@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#16201f" />
+    <title>训练记录</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">本地训练日志</p>
+          <h1>训练记录</h1>
+        </div>
+        <button class="icon-button" id="backup-shortcut" type="button" aria-label="导出备份" title="导出备份">
+          <span aria-hidden="true">↓</span>
+        </button>
+      </header>
+
+      <main>
+        <section class="view active" id="today-view" aria-labelledby="today-tab">
+          <div class="today-head">
+            <div>
+              <label for="workout-date">训练日期</label>
+              <input id="workout-date" type="date" />
+            </div>
+            <div class="today-stats">
+              <span id="today-sets">0 组</span>
+              <span id="today-volume">0 kg</span>
+            </div>
+          </div>
+
+          <form class="quick-add" id="quick-add-form">
+            <div class="field wide">
+              <label for="exercise-picker">添加动作</label>
+              <input id="exercise-picker" list="exercise-options" placeholder="搜索或输入新动作" autocomplete="off" />
+              <datalist id="exercise-options"></datalist>
+            </div>
+            <div class="field compact">
+              <label for="load-value">重量</label>
+              <input id="load-value" type="number" min="0" step="0.5" inputmode="decimal" placeholder="20" />
+            </div>
+            <div class="field compact">
+              <label for="load-unit">类型</label>
+              <select id="load-unit">
+                <option value="kg">kg</option>
+                <option value="kg助力">kg助力</option>
+                <option value="自重">自重</option>
+              </select>
+            </div>
+            <div class="field tiny">
+              <label for="target-sets">组</label>
+              <input id="target-sets" type="number" min="1" max="99" step="1" inputmode="numeric" value="5" />
+            </div>
+            <div class="field tiny">
+              <label for="target-reps">次</label>
+              <input id="target-reps" type="number" min="1" max="999" step="1" inputmode="numeric" value="12" />
+            </div>
+            <button class="primary-button" type="submit">添加</button>
+          </form>
+
+          <div class="exercise-list" id="today-list"></div>
+          <div class="empty-state" id="today-empty">
+            <strong>今天还没有动作</strong>
+            <span>从上方添加一个动作，训练时每完成一组就点一次。</span>
+          </div>
+        </section>
+
+        <section class="view" id="calendar-view" aria-labelledby="calendar-tab">
+          <div class="calendar-toolbar">
+            <button class="icon-button" id="prev-month" type="button" aria-label="上个月" title="上个月">‹</button>
+            <h2 id="calendar-title"></h2>
+            <button class="icon-button" id="next-month" type="button" aria-label="下个月" title="下个月">›</button>
+          </div>
+          <div class="calendar-summary">
+            <span id="month-days">0 天训练</span>
+            <span id="current-streak">连续 0 天</span>
+            <span id="best-streak">最长 0 天</span>
+          </div>
+          <div class="calendar-grid weekday-row" aria-hidden="true">
+            <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+          </div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+          <section class="history-panel" id="history-panel">
+            <h3>选择日期查看记录</h3>
+            <div id="history-detail"></div>
+          </section>
+        </section>
+
+        <section class="view" id="library-view" aria-labelledby="library-tab">
+          <form class="library-form" id="library-form">
+            <div class="field wide">
+              <label for="library-name">动作名称</label>
+              <input id="library-name" placeholder="例如 固定推胸" autocomplete="off" />
+            </div>
+            <div class="field compact">
+              <label for="library-category">分类</label>
+              <select id="library-category">
+                <option>胸</option>
+                <option>背</option>
+                <option>肩</option>
+                <option>腿</option>
+                <option>手臂</option>
+                <option>核心</option>
+                <option>其他</option>
+              </select>
+            </div>
+            <button class="primary-button" type="submit">保存动作</button>
+          </form>
+          <div class="library-list" id="library-list"></div>
+        </section>
+
+        <section class="view" id="backup-view" aria-labelledby="backup-tab">
+          <div class="backup-actions">
+            <button class="primary-button" id="export-data" type="button">导出 JSON 备份</button>
+            <label class="file-button" for="import-data">导入备份</label>
+            <input id="import-data" type="file" accept="application/json,.json" />
+          </div>
+          <dl class="backup-meta">
+            <div>
+              <dt>训练天数</dt>
+              <dd id="backup-workouts">0</dd>
+            </div>
+            <div>
+              <dt>动作库</dt>
+              <dd id="backup-exercises">0</dd>
+            </div>
+            <div>
+              <dt>上次导出</dt>
+              <dd id="backup-time">从未</dd>
+            </div>
+          </dl>
+        </section>
+      </main>
+
+      <nav class="tabbar" aria-label="主导航">
+        <button class="tab active" id="today-tab" type="button" data-view="today-view">今日</button>
+        <button class="tab" id="calendar-tab" type="button" data-view="calendar-view">日历</button>
+        <button class="tab" id="library-tab" type="button" data-view="library-view">动作库</button>
+        <button class="tab" id="backup-tab" type="button" data-view="backup-view">备份</button>
+      </nav>
+    </div>
+
+    <template id="exercise-card-template">
+      <article class="exercise-card">
+        <div class="exercise-main">
+          <div>
+            <h3></h3>
+            <p class="exercise-meta"></p>
+          </div>
+          <button class="delete-button" type="button" aria-label="删除动作" title="删除动作">×</button>
+        </div>
+        <div class="progress-row">
+          <div class="progress-track"><span></span></div>
+          <strong class="set-count"></strong>
+        </div>
+        <div class="stepper-row">
+          <button class="secondary-button minus-set" type="button">-1组</button>
+          <button class="plus-set" type="button">+1组</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

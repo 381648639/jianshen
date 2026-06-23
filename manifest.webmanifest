@@ -1,0 +1,16 @@
+{
+  "name": "训练记录",
+  "short_name": "训练",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f3f0e8",
+  "theme_color": "#16201f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
