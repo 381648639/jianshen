@@ -473,16 +473,99 @@ async function importBackup(event) {
     if (!Array.isArray(data.exercises) || !Array.isArray(data.workouts)) {
       throw new Error("备份文件格式不正确");
     }
-    await Promise.all(data.exercises.map((exercise) => put("exercises", exercise)));
-    await Promise.all(data.workouts.map((workout) => put("workouts", workout)));
+    const idMap = await importExercises(data.exercises);
+    await importWorkouts(data.workouts, idMap);
     await loadAll();
     render();
     alert("备份已导入");
   } catch (error) {
-    alert(error.message || "导入失败");
+    alert(error.message || "导入失败，请确认选择的是训练记录 JSON 备份。");
   } finally {
     event.target.value = "";
   }
+}
+
+async function importExercises(importedExercises) {
+  const currentExercises = await getAll("exercises");
+  const byName = new Map(currentExercises.map((exercise) => [exercise.name, exercise]));
+  const byId = new Map(currentExercises.map((exercise) => [exercise.id, exercise]));
+  const idMap = new Map();
+
+  for (const imported of importedExercises) {
+    const name = normalizeName(imported?.name || "");
+    if (!name) continue;
+
+    const existingByName = byName.get(name);
+    if (existingByName) {
+      idMap.set(imported.id, existingByName.id);
+      continue;
+    }
+
+    const idIsTaken = imported?.id && byId.has(imported.id);
+    const exercise = {
+      id: idIsTaken ? crypto.randomUUID() : imported?.id || crypto.randomUUID(),
+      name,
+      category: imported?.category || "其他",
+      createdAt: imported?.createdAt || new Date().toISOString()
+    };
+    await put("exercises", exercise);
+    byName.set(name, exercise);
+    byId.set(exercise.id, exercise);
+    idMap.set(imported.id, exercise.id);
+  }
+
+  return idMap;
+}
+
+async function importWorkouts(importedWorkouts, exerciseIdMap) {
+  const currentWorkouts = await getAll("workouts");
+  const byDate = new Map(currentWorkouts.map((workout) => [workout.date, workout]));
+
+  for (const imported of importedWorkouts) {
+    if (!imported?.date || !Array.isArray(imported.items)) continue;
+
+    const existing = byDate.get(imported.date) ?? {
+      date: imported.date,
+      items: [],
+      createdAt: imported.createdAt || new Date().toISOString()
+    };
+    const itemById = new Map(existing.items.map((item) => [item.id, item]));
+
+    for (const item of imported.items) {
+      const id = item?.id || crypto.randomUUID();
+      const normalized = normalizeWorkoutItem(item, exerciseIdMap);
+      if (!normalized) continue;
+
+      if (itemById.has(id)) {
+        Object.assign(itemById.get(id), normalized, { id });
+      } else {
+        const nextItem = { ...normalized, id };
+        existing.items.push(nextItem);
+        itemById.set(id, nextItem);
+      }
+    }
+
+    await saveWorkout(existing);
+    byDate.set(existing.date, existing);
+  }
+}
+
+function normalizeWorkoutItem(item, exerciseIdMap) {
+  const name = normalizeName(item?.name || "");
+  if (!name) return null;
+
+  return {
+    exerciseId: exerciseIdMap.get(item.exerciseId) || item.exerciseId || "",
+    name,
+    category: item.category || "其他",
+    loadValue: Number.isFinite(Number(item.loadValue)) ? Number(item.loadValue) : 0,
+    unit: item.unit || "kg",
+    targetSets: Number.isFinite(Number(item.targetSets)) ? Number(item.targetSets) : 1,
+    reps: Number.isFinite(Number(item.reps)) ? Number(item.reps) : 1,
+    completedSets: Number.isFinite(Number(item.completedSets)) ? Number(item.completedSets) : 0,
+    createdAt: item.createdAt || new Date().toISOString(),
+    updatedAt: item.updatedAt || new Date().toISOString()
+  };
 }
 
 function calculateStreaks(dateKeys) {

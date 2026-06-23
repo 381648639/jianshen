@@ -1,7 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#16201f"/>
-  <path d="M126 280h260v54H126z" fill="#f3f0e8"/>
-  <path d="M70 244h46v126H70zM396 244h46v126h-46z" fill="#0f766e"/>
-  <path d="M154 160h204c24 0 44 20 44 44v24H110v-24c0-24 20-44 44-44z" fill="#b3541e"/>
-  <path d="M166 386h180v38H166z" fill="#f3f0e8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="156" y1="102" x2="860" y2="930" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#10201d"/>
+      <stop offset=".56" stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#b8872f"/>
+    </linearGradient>
+    <linearGradient id="card" x1="240" y1="230" x2="770" y2="820" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#eadfca"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="36" stdDeviation="34" flood-color="#06110f" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="808" cy="210" r="148" fill="#fffaf0" opacity=".12"/>
+  <circle cx="188" cy="796" r="188" fill="#fffaf0" opacity=".1"/>
+  <rect x="214" y="184" width="596" height="680" rx="92" fill="url(#card)" filter="url(#shadow)"/>
+  <rect x="214" y="184" width="596" height="168" rx="92" fill="#16201f"/>
+  <path d="M214 278h596v102H214z" fill="#16201f"/>
+  <rect x="326" y="132" width="78" height="154" rx="39" fill="#d7efe9"/>
+  <rect x="620" y="132" width="78" height="154" rx="39" fill="#d7efe9"/>
+  <rect x="300" y="444" width="424" height="256" rx="68" fill="#0f766e"/>
+  <path d="M406 574l68 68 154-164" fill="none" stroke="#fffaf0" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M286 768h452" stroke="#16201f" stroke-width="56" stroke-linecap="round"/>
+  <path d="M230 724h74v88h-74zM720 724h74v88h-74z" fill="#16201f"/>
+  <path d="M320 768h384" stroke="#fffaf0" stroke-width="24" stroke-linecap="round" opacity=".82"/>
 </svg>
