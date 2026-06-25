@@ -99,6 +99,10 @@ h3 {
 .calendar-toolbar,
 .calendar-summary,
 .history-panel,
+.muscle-toolbar,
+.metric-tabs,
+.muscle-stats,
+.muscle-card,
 .backup-meta {
   background: rgba(255, 250, 240, 0.9);
   border: 1px solid var(--line);
@@ -146,6 +150,7 @@ select:focus {
 
 .today-stats,
 .calendar-summary,
+.muscle-stats,
 .backup-meta {
   display: flex;
   flex-wrap: wrap;
@@ -239,12 +244,32 @@ select:focus {
   box-shadow: var(--shadow);
 }
 
+.library-item {
+  align-items: stretch;
+}
+
+.library-edit {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(180px, 1fr) 130px auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.library-edit .secondary-button {
+  white-space: nowrap;
+}
+
 .exercise-main,
 .library-item {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+}
+
+.library-item {
+  align-items: stretch;
 }
 
 .exercise-meta,
@@ -465,6 +490,227 @@ select:focus {
   margin: 8px 0 0;
 }
 
+.muscle-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.muscle-toolbar p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.segmented,
+.metric-tabs {
+  display: flex;
+  gap: 5px;
+}
+
+.segmented {
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #e8e1d3;
+}
+
+.segment,
+.metric-tab {
+  min-height: 36px;
+  border: 0;
+  border-radius: 7px;
+  padding: 7px 11px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.segment.active,
+.metric-tab.active {
+  background: #b42318;
+  color: white;
+}
+
+.metric-tabs {
+  flex-wrap: wrap;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-shadow: none;
+}
+
+.muscle-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 0;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.muscle-stats div {
+  padding: 12px;
+  border-right: 1px solid var(--line);
+}
+
+.muscle-stats div:last-child {
+  border-right: 0;
+}
+
+.muscle-stats dt,
+.muscle-row span,
+.heat-legend span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.muscle-stats dd {
+  margin: 5px 0 0;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.muscle-card {
+  padding: 0;
+  margin-bottom: calc(112px + env(safe-area-inset-bottom));
+  overflow: hidden;
+  background: #fffdf8;
+}
+
+.muscle-map-host {
+  width: 100%;
+  overflow: hidden;
+}
+
+.muscle-map-host > svg,
+.muscle-map {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.muscle-map-host:not(:empty) + .muscle-map {
+  display: none;
+}
+
+.muscle-map-host .muscle-map {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.map-panel {
+  fill: #fffdf8;
+  stroke: #e2ded4;
+  stroke-width: 2;
+}
+
+.map-caption,
+.map-date,
+.figure-name,
+.legend-text {
+  fill: #6b7571;
+  font-weight: 750;
+}
+
+.map-caption {
+  font-size: 19px;
+}
+
+.map-date {
+  font-size: 20px;
+  text-anchor: end;
+}
+
+.body-silhouette,
+.body-head {
+  fill: #edf0f2;
+  stroke: #c9d2db;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.muscle-shape {
+  fill: var(--heat-color, #e5eaf0);
+  stroke: #fffdf8;
+  stroke-linejoin: round;
+  stroke-width: 3.4;
+  transition:
+    fill 0.2s ease,
+    filter 0.2s ease;
+}
+
+.muscle-shape.active {
+  filter: drop-shadow(0 6px 8px rgba(180, 35, 24, 0.2));
+}
+
+.muscle-detail {
+  fill: none;
+  stroke: rgba(255, 253, 248, 0.86);
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.label-line {
+  fill: none;
+  stroke: #bfc7d4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.label-title {
+  fill: #3158a7;
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.label-value {
+  fill: #dc2626;
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.label-sub {
+  fill: #7b8794;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.label-title.right,
+.label-value.right,
+.label-sub.right {
+  text-anchor: end;
+}
+
+.label-line.muted,
+.label-title.muted,
+.label-value.muted,
+.label-sub.muted {
+  opacity: 0.42;
+}
+
+.figure-name {
+  font-size: 16px;
+  text-anchor: middle;
+}
+
+.legend-text {
+  font-size: 15px;
+}
+
+.legend-low {
+  fill: #e5eaf0;
+}
+
+.legend-high {
+  fill: #dc2626;
+}
+
 .backup-actions {
   display: flex;
   flex-wrap: wrap;
@@ -521,7 +767,7 @@ select:focus {
   z-index: 5;
   display: grid;
   width: min(520px, calc(100% - 24px));
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 5px;
   transform: translateX(-50%);
   padding: 6px;
@@ -567,6 +813,14 @@ select:focus {
     grid-template-columns: 1fr 1fr;
   }
 
+  .library-edit {
+    grid-template-columns: 1fr auto;
+  }
+
+  .library-edit input {
+    grid-column: 1 / -1;
+  }
+
   .calendar-grid {
     gap: 6px;
   }
@@ -604,6 +858,37 @@ select:focus {
 
   .history-panel {
     margin-bottom: 28px;
+  }
+
+  .muscle-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .segmented {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .metric-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .muscle-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .muscle-stats div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .muscle-stats div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .muscle-map {
+    min-height: 0;
   }
 
   .field.wide,

@@ -1,0 +1,266 @@
+<svg class="muscle-map" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 480 1180" preserveAspectRatio="xMidYMin meet" role="img" aria-label="部位训练热力图">
+  <title>部位概览</title>
+  <desc>原创竖版肌肉分布 SVG，上方正面、下方背面，用红色深浅展示训练部位热度。</desc>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .map-panel {
+      fill: #fffdf8;
+      stroke: #e2ded4;
+      stroke-width: 2;
+    }
+
+    .map-caption,
+    .map-date,
+    .figure-name,
+    .legend-text {
+      fill: #5f6d68;
+      font-weight: 750;
+    }
+
+    .map-caption {
+      font-size: 14px;
+    }
+
+    .map-date {
+      font-size: 13px;
+      text-anchor: end;
+    }
+
+    .body-silhouette,
+    .body-head {
+      fill: #edf1f4;
+      stroke: #c7d1dc;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.2;
+    }
+
+    .body-hair {
+      fill: #8fa3bd;
+      opacity: 0.92;
+    }
+
+    .body-guide {
+      fill: none;
+      stroke: #c7d1dc;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.4;
+      opacity: 0.72;
+    }
+
+    .muscle-shape {
+      fill: var(--heat-color, #e5eaf0);
+      stroke: #fffdf8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.4;
+    }
+
+    .muscle-shape.primary {
+      --heat-color: #dc2626;
+      filter: drop-shadow(0 5px 7px rgba(180, 35, 24, 0.2));
+    }
+
+    .muscle-shape.assist {
+      --heat-color: #f87171;
+    }
+
+    .leg-muscle {
+      stroke: rgba(255, 253, 248, 0.68);
+    }
+
+    .leg-guide {
+      opacity: 0.38;
+    }
+
+    .muscle-detail {
+      fill: none;
+      stroke: rgba(255, 253, 248, 0.92);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2.1;
+    }
+
+    .label-line {
+      fill: none;
+      stroke: #bfc7d4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.55;
+    }
+
+    .label-title {
+      fill: #3158a7;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .label-value {
+      fill: #dc2626;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .label-sub {
+      fill: #7b8794;
+      font-size: 8.5px;
+      font-weight: 750;
+    }
+
+    .right {
+      text-anchor: end;
+    }
+
+    .muted {
+      opacity: 0.42;
+    }
+
+    .figure-name {
+      font-size: 13px;
+      text-anchor: middle;
+    }
+
+    .legend-text {
+      font-size: 12px;
+    }
+
+    .legend-low {
+      fill: #e5eaf0;
+    }
+
+    .legend-mid {
+      fill: #f87171;
+    }
+
+    .legend-high {
+      fill: #dc2626;
+    }
+  </style>
+
+  <defs>
+    <path id="figure-body" d="M0 0c-21 0-36 16-36 37 0 16 9 30 23 37v25l-40 17c-20 8-32 24-39 48l-18 61-32 74 20 12 38-61 13-45c2 33 4 64 7 95 2 22 5 41 2 61l-18 89h31l18-120c2-12 7-23 16-30h30c9 7 14 18 16 30l18 120h31l-18-89c-3-20 0-39 2-61 3-31 5-62 7-95l13 45 38 61 20-12-32-74-18-61c-7-24-19-40-39-48L13 99V74c14-7 23-21 23-37C36 16 21 0 0 0z" />
+    <clipPath id="front-body-clip" clipPathUnits="userSpaceOnUse">
+      <use href="#figure-body" />
+    </clipPath>
+    <clipPath id="back-body-clip" clipPathUnits="userSpaceOnUse">
+      <use href="#figure-body" />
+    </clipPath>
+  </defs>
+
+  <rect class="map-panel" x="8" y="8" width="464" height="1164" rx="22" />
+  <text class="map-caption" x="28" y="48">人体肌肉的部位训练概况。</text>
+  <text class="map-date" id="muscle-map-range" x="432" y="82">06.24</text>
+
+  <g class="figure front" transform="translate(240 112)">
+    <use class="body-silhouette" href="#figure-body" />
+    <circle class="body-head" cx="0" cy="37" r="29" />
+    <path class="body-hair" d="M-31 28c4-23 21-36 42-31 14 4 22 15 24 31-10-9-21-13-34-11-12 1-22 6-32 11z" />
+    <path class="body-guide" d="M0 74v36M-22 104c13 8 31 8 44 0M-58 300c16 9 38 9 54 1M58 300c-16 9-38 9-54 1" />
+
+    <g clip-path="url(#front-body-clip)">
+      <path class="muscle-shape assist" data-muscle="肩" d="M-58 116c-23 5-38 21-44 48 18 4 36-3 50-21l14-23c-6-3-13-5-20-4z" />
+      <path class="muscle-shape assist" data-muscle="肩" d="M58 116c23 5 38 21 44 48-18 4-36-3-50-21l-14-23c6-3 13-5 20-4z" />
+      <path class="muscle-shape primary" data-muscle="胸" d="M-49 119c23-12 48-6 49 24v36c-32-2-57-14-68-34 2-12 8-21 19-26z" />
+      <path class="muscle-shape primary" data-muscle="胸" d="M49 119c-23-12-48-6-49 24v36c32-2 57-14 68-34-2-12-8-21-19-26z" />
+      <path class="muscle-shape assist" data-muscle="核心" d="M-34 183h68l-8 92h-52l-8-92z" />
+      <path class="muscle-detail" d="M0 183v92M-29 206h58M-26 232h52M-22 258h44" />
+      <path class="muscle-shape primary" data-muscle="手臂" d="M-88 171c15 3 24 14 24 31l-12 67c-7 6-22 6-30-2l7-57 11-39z" />
+      <path class="muscle-shape primary" data-muscle="手臂" d="M88 171c-15 3-24 14-24 31l12 67c7 6 22 6 30-2l-7-57-11-39z" />
+      <path class="muscle-shape" data-muscle="手臂" d="M-108 267l-26 61 17 10 35-55c-6-3-16-8-26-16z" />
+      <path class="muscle-shape" data-muscle="手臂" d="M108 267l26 61-17 10-35-55c6-3 16-8 26-16z" />
+      <path class="muscle-shape leg-muscle" data-muscle="腿" d="M-48 297c19-5 33 8 34 33l-12 120h-31l-4-82c-2-31 2-55 13-71z" />
+      <path class="muscle-shape leg-muscle" data-muscle="腿" d="M48 297c-19-5-33 8-34 33l12 120h31l4-82c2-31-2-55-13-71z" />
+    </g>
+
+    <path class="body-guide leg-guide" d="M-29 325l-14 95M29 325l14 95M-8 300c-5 43-6 84-3 126M8 300c5 43 6 84 3 126" />
+  </g>
+
+  <path class="label-line" d="M185 250H98L68 232" />
+  <text class="label-title" x="28" y="225">胸</text>
+  <text class="label-value" x="28" y="242" data-muscle-value="胸">0组</text>
+  <text class="label-sub" x="28" y="257" data-muscle-sub="胸">0次/0kg/0kg</text>
+
+  <path class="label-line" d="M150 314H88L64 296" />
+  <text class="label-title" x="28" y="292">手臂</text>
+  <text class="label-value" x="28" y="309" data-muscle-value="手臂">0组</text>
+  <text class="label-sub" x="28" y="324" data-muscle-sub="手臂">0次/0kg/0kg</text>
+
+  <path class="label-line" d="M207 376H92L64 400" />
+  <text class="label-title" x="28" y="394">核心</text>
+  <text class="label-value" x="28" y="411" data-muscle-value="核心">0组</text>
+  <text class="label-sub" x="28" y="426" data-muscle-sub="核心">0次/0kg/0kg</text>
+
+  <path class="label-line muted" d="M206 504H88L60 532" />
+  <text class="label-title muted" x="28" y="526">腿</text>
+  <text class="label-value muted" x="28" y="543" data-muscle-value="腿">0组</text>
+  <text class="label-sub muted" x="28" y="558" data-muscle-sub="腿">0次/0kg/0kg</text>
+
+  <path class="label-line" d="M296 232h90l22-30" />
+  <text class="label-title right" x="436" y="195">肩</text>
+  <text class="label-value right" x="436" y="212" data-muscle-value="肩">0组</text>
+  <text class="label-sub right" x="436" y="227" data-muscle-sub="肩">0次/0kg/0kg</text>
+
+  <text class="figure-name" x="240" y="590">正面</text>
+
+  <g class="figure back" transform="translate(240 648)">
+    <use class="body-silhouette" href="#figure-body" />
+    <circle class="body-head" cx="0" cy="37" r="29" />
+    <path class="body-hair" d="M-31 29c4-22 21-34 42-31 16 3 25 14 27 31-13-5-25-5-37 0-12 4-22 4-32 0z" />
+    <path class="body-guide" d="M0 74v224M-58 300c16 9 38 9 54 1M58 300c-16 9-38 9-54 1" />
+
+    <g clip-path="url(#back-body-clip)">
+      <path class="muscle-shape assist" data-muscle="肩" d="M-58 116c-23 5-38 21-44 48 18 4 36-3 50-21l14-23c-6-3-13-5-20-4z" />
+      <path class="muscle-shape assist" data-muscle="肩" d="M58 116c23 5 38 21 44 48-18 4-36-3-50-21l-14-23c6-3 13-5 20-4z" />
+      <path class="muscle-shape primary" data-muscle="背" d="M-43 112c23 13 39 35 43 69v99c-39-27-63-68-71-120 6-20 15-36 28-48z" />
+      <path class="muscle-shape primary" data-muscle="背" d="M43 112c-23 13-39 35-43 69v99c39-27 63-68 71-120-6-20-15-36-28-48z" />
+      <path class="muscle-detail" d="M0 105v181M-39 151c24 25 36 56 39 92M39 151c-24 25-36 56-39 92" />
+      <path class="muscle-shape primary" data-muscle="手臂" d="M-88 171c15 3 24 14 24 31l-12 67c-7 6-22 6-30-2l7-57 11-39z" />
+      <path class="muscle-shape primary" data-muscle="手臂" d="M88 171c-15 3-24 14-24 31l12 67c7 6 22 6 30-2l-7-57-11-39z" />
+      <path class="muscle-shape" data-muscle="手臂" d="M-108 267l-26 61 17 10 35-55c-6-3-16-8-26-16z" />
+      <path class="muscle-shape" data-muscle="手臂" d="M108 267l26 61-17 10-35-55c6-3 16-8 26-16z" />
+      <path class="muscle-shape" data-muscle="臀" d="M-38 280c22-10 37-2 38 21-7 24-24 38-49 42-13-21-9-43 11-63z" />
+      <path class="muscle-shape" data-muscle="臀" d="M38 280c-22-10-37-2-38 21 7 24 24 38 49 42 13-21 9-43-11-63z" />
+      <path class="muscle-shape leg-muscle" data-muscle="腿" d="M-47 333c18-4 31 7 33 29l-10 88h-31l-4-58c-2-27 2-47 12-59z" />
+      <path class="muscle-shape leg-muscle" data-muscle="腿" d="M47 333c-18-4-31 7-33 29l10 88h31l4-58c2-27-2-47-12-59z" />
+    </g>
+
+    <path class="body-guide leg-guide" d="M-29 350l-14 76M29 350l14 76M-10 340c-4 35-3 66-1 95M10 340c4 35 3 66 1 95" />
+  </g>
+
+  <path class="label-line" d="M182 796H98L68 772" />
+  <text class="label-title" x="28" y="764">背</text>
+  <text class="label-value" x="28" y="781" data-muscle-value="背">0组</text>
+  <text class="label-sub" x="28" y="796" data-muscle-sub="背">0次/0kg/0kg</text>
+
+  <path class="label-line" d="M150 850H88L64 832" />
+  <text class="label-title" x="28" y="828">手臂</text>
+  <text class="label-value" x="28" y="845" data-muscle-value="手臂">0组</text>
+  <text class="label-sub" x="28" y="860" data-muscle-sub="手臂">0次/0kg/0kg</text>
+
+  <path class="label-line muted" d="M206 1042H88L60 1074" />
+  <text class="label-title muted" x="28" y="1068">腿</text>
+  <text class="label-value muted" x="28" y="1085" data-muscle-value="腿">0组</text>
+  <text class="label-sub muted" x="28" y="1100" data-muscle-sub="腿">0次/0kg/0kg</text>
+
+  <path class="label-line" d="M296 768h90l22-30" />
+  <text class="label-title right" x="436" y="732">肩</text>
+  <text class="label-value right" x="436" y="749" data-muscle-value="肩">0组</text>
+  <text class="label-sub right" x="436" y="764" data-muscle-sub="肩">0次/0kg/0kg</text>
+
+  <path class="label-line muted" d="M270 954h98l30 34" />
+  <text class="label-title muted right" x="436" y="978">臀</text>
+  <text class="label-value muted right" x="436" y="995" data-muscle-value="臀">0组</text>
+  <text class="label-sub muted right" x="436" y="1010" data-muscle-sub="臀">0次/0kg/0kg</text>
+
+  <text class="figure-name" x="240" y="1126">背面</text>
+  <text class="legend-text" x="326" y="1138">少</text>
+  <rect class="legend-low" x="350" y="1126" width="16" height="14" rx="2" />
+  <rect class="legend-mid" x="368" y="1126" width="16" height="14" rx="2" />
+  <rect class="legend-high" x="386" y="1126" width="16" height="14" rx="2" />
+  <text class="legend-text" x="410" y="1138">多</text>
+</svg>

@@ -1,9 +1,10 @@
-const CACHE_NAME = "workout-log-v7";
+const CACHE_NAME = "workout-log-v21";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./muscle-map.svg",
   "./manifest.webmanifest",
   "./icon.svg",
   "./apple-touch-icon.png",

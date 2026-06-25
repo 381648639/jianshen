@@ -13,6 +13,15 @@ const DEFAULT_EXERCISES = [
   ["绳索下压", "手臂"]
 ];
 
+const EXERCISE_CATEGORIES = ["胸", "背", "肩", "腿", "臀", "手臂", "核心", "其他"];
+const MUSCLE_GROUPS = ["胸", "背", "肩", "手臂", "腿", "臀", "核心"];
+const MUSCLE_METRICS = {
+  sets: { label: "组数", unit: "" },
+  reps: { label: "次数", unit: "次" },
+  volume: { label: "总重量", unit: "kg" },
+  maxLoad: { label: "最大重量", unit: "kg" }
+};
+
 const state = {
   db: null,
   exercises: [],
@@ -20,13 +29,17 @@ const state = {
   selectedDate: todayKey(),
   calendarMonth: new Date().getMonth(),
   calendarYear: new Date().getFullYear(),
-  selectedHistoryDate: todayKey()
+  selectedHistoryDate: todayKey(),
+  musclePeriod: "week",
+  muscleMetric: "sets"
 };
 
 const els = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
   cacheElements();
+  await loadMuscleMap();
+  cacheMuscleElements();
   wireEvents();
   state.db = await openDb();
   await seedDefaultExercises();
@@ -65,12 +78,41 @@ function cacheElements() {
     libraryName: document.querySelector("#library-name"),
     libraryCategory: document.querySelector("#library-category"),
     libraryList: document.querySelector("#library-list"),
+    muscleMapHost: document.querySelector("#muscle-map-host"),
+    muscleRange: document.querySelector("#muscle-range"),
+    musclePeriodButtons: document.querySelectorAll("[data-muscle-period]"),
+    muscleMetricButtons: document.querySelectorAll("[data-muscle-metric]"),
+    muscleTotalSets: document.querySelector("#muscle-total-sets"),
+    muscleTotalReps: document.querySelector("#muscle-total-reps"),
+    muscleTotalVolume: document.querySelector("#muscle-total-volume"),
+    muscleMaxLoad: document.querySelector("#muscle-max-load"),
     exportData: document.querySelector("#export-data"),
     importData: document.querySelector("#import-data"),
     backupShortcut: document.querySelector("#backup-shortcut"),
     backupWorkouts: document.querySelector("#backup-workouts"),
     backupExercises: document.querySelector("#backup-exercises"),
     backupTime: document.querySelector("#backup-time")
+  });
+  cacheMuscleElements();
+}
+
+async function loadMuscleMap() {
+  if (!els.muscleMapHost) return;
+  try {
+    const response = await fetch("muscle-map.svg", { cache: "no-store" });
+    if (!response.ok) throw new Error("muscle map unavailable");
+    els.muscleMapHost.innerHTML = await response.text();
+  } catch {
+    els.muscleMapHost.replaceChildren();
+  }
+}
+
+function cacheMuscleElements() {
+  Object.assign(els, {
+    muscleMapRange: document.querySelector("#muscle-map-range"),
+    muscleShapes: document.querySelectorAll("[data-muscle]"),
+    muscleLabelValues: document.querySelectorAll("[data-muscle-value]"),
+    muscleLabelSubs: document.querySelectorAll("[data-muscle-sub]")
   });
 }
 
@@ -132,10 +174,29 @@ function wireEvents() {
     event.preventDefault();
     const name = normalizeName(els.libraryName.value);
     if (!name) return;
-    await ensureExercise(name, els.libraryCategory.value);
+    const existing = state.exercises.find((exercise) => exercise.name === name);
+    if (existing) {
+      await updateExercise(existing.id, name, els.libraryCategory.value);
+    } else {
+      await ensureExercise(name, els.libraryCategory.value);
+      await loadAll();
+      render();
+    }
     els.libraryName.value = "";
-    await loadAll();
-    render();
+  });
+
+  els.musclePeriodButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.musclePeriod = button.dataset.musclePeriod;
+      renderMuscles();
+    });
+  });
+
+  els.muscleMetricButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.muscleMetric = button.dataset.muscleMetric;
+      renderMuscles();
+    });
   });
 
   els.exportData.addEventListener("click", exportBackup);
@@ -224,6 +285,7 @@ function render() {
   renderToday();
   renderCalendar();
   renderLibrary();
+  renderMuscles();
   renderBackupMeta();
 }
 
@@ -373,16 +435,235 @@ function renderLibrary() {
     ...state.exercises.map((exercise) => {
       const item = document.createElement("article");
       item.className = "library-item";
-      const body = document.createElement("div");
-      const name = document.createElement("h3");
-      const category = document.createElement("p");
-      name.textContent = exercise.name;
-      category.textContent = exercise.category;
-      body.append(name, category);
-      item.append(body);
+      const form = document.createElement("form");
+      form.className = "library-edit";
+
+      const nameInput = document.createElement("input");
+      nameInput.value = exercise.name;
+      nameInput.autocomplete = "off";
+      nameInput.setAttribute("aria-label", "动作名称");
+
+      const categorySelect = document.createElement("select");
+      categorySelect.setAttribute("aria-label", "动作分类");
+      categorySelect.replaceChildren(...createCategoryOptions(exercise.category));
+
+      const save = document.createElement("button");
+      save.className = "secondary-button";
+      save.type = "submit";
+      save.textContent = "保存";
+
+      form.append(nameInput, categorySelect, save);
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await updateExercise(exercise.id, nameInput.value, categorySelect.value);
+      });
+      item.append(form);
       return item;
     })
   );
+}
+
+function createCategoryOptions(selectedCategory) {
+  const selected = EXERCISE_CATEGORIES.includes(selectedCategory) ? selectedCategory : "其他";
+  return EXERCISE_CATEGORIES.map((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    option.selected = category === selected;
+    return option;
+  });
+}
+
+async function updateExercise(exerciseId, rawName, rawCategory) {
+  const exercise = state.exercises.find((item) => item.id === exerciseId);
+  if (!exercise) return;
+
+  const name = normalizeName(rawName);
+  const category = EXERCISE_CATEGORIES.includes(rawCategory) ? rawCategory : "其他";
+  if (!name) {
+    alert("动作名称不能为空");
+    renderLibrary();
+    return;
+  }
+
+  const duplicate = state.exercises.find((item) => item.id !== exerciseId && item.name === name);
+  if (duplicate) {
+    alert("动作名称已存在");
+    renderLibrary();
+    return;
+  }
+
+  const nextExercise = {
+    ...exercise,
+    name,
+    category,
+    updatedAt: new Date().toISOString()
+  };
+
+  await put("exercises", nextExercise);
+  await syncWorkoutItemsForExercise(exercise, nextExercise);
+  await loadAll();
+  render();
+}
+
+async function syncWorkoutItemsForExercise(previousExercise, nextExercise) {
+  const changedWorkouts = [];
+
+  state.workouts.forEach((workout) => {
+    let changed = false;
+    workout.items.forEach((item) => {
+      if (item.exerciseId !== previousExercise.id && item.name !== previousExercise.name) return;
+      item.exerciseId = nextExercise.id;
+      item.name = nextExercise.name;
+      item.category = nextExercise.category;
+      item.updatedAt = new Date().toISOString();
+      changed = true;
+    });
+    if (changed) changedWorkouts.push(workout);
+  });
+
+  await Promise.all(changedWorkouts.map((workout) => saveWorkout(workout)));
+}
+
+function renderMuscles() {
+  if (!els.muscleShapes.length) return;
+
+  const range = getMuscleDateRange(state.musclePeriod);
+  const report = getMuscleReport(range.start, range.end);
+  const maxMetric = Math.max(...MUSCLE_GROUPS.map((group) => report.groups[group][state.muscleMetric]), 0);
+
+  els.muscleRange.textContent = formatDateRange(range.start, range.end);
+  if (els.muscleMapRange) els.muscleMapRange.textContent = formatCompactDateRange(range.start, range.end);
+  els.muscleTotalSets.textContent = formatNumber(report.totals.sets);
+  els.muscleTotalReps.textContent = `${formatNumber(report.totals.reps)} 次`;
+  els.muscleTotalVolume.textContent = `${formatNumber(report.totals.volume)} kg`;
+  els.muscleMaxLoad.textContent = `${formatNumber(report.totals.maxLoad)} kg`;
+
+  els.musclePeriodButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.musclePeriod === state.musclePeriod);
+  });
+  els.muscleMetricButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.muscleMetric === state.muscleMetric);
+  });
+
+  els.muscleShapes.forEach((shape) => {
+    const group = shape.dataset.muscle;
+    const value = report.groups[group]?.[state.muscleMetric] ?? 0;
+    const intensity = maxMetric > 0 ? value / maxMetric : 0;
+    shape.style.setProperty("--heat-color", heatColor(intensity));
+    shape.classList.toggle("active", value > 0);
+  });
+
+  els.muscleLabelValues.forEach((label) => {
+    const stats = report.groups[label.dataset.muscleValue];
+    label.textContent = stats ? `${formatNumber(stats.sets)}组` : "0组";
+  });
+  els.muscleLabelSubs.forEach((label) => {
+    const stats = report.groups[label.dataset.muscleSub];
+    label.textContent = stats
+      ? `${formatNumber(stats.reps)}次/${formatNumber(stats.volume)}kg/${formatNumber(stats.maxLoad)}kg`
+      : "0次/0kg/0kg";
+  });
+}
+
+function getMuscleReport(start, end) {
+  const groups = Object.fromEntries(
+    MUSCLE_GROUPS.map((group) => [
+      group,
+      { sets: 0, reps: 0, volume: 0, maxLoad: 0 }
+    ])
+  );
+  const totals = { sets: 0, reps: 0, volume: 0, maxLoad: 0 };
+
+  state.workouts.forEach((workout) => {
+    const date = keyToDate(workout.date);
+    if (date < start || date > end) return;
+
+    workout.items.forEach((item) => {
+      if (!item.completedSets) return;
+      const group = getMuscleGroup(item);
+      if (!groups[group]) return;
+
+      const reps = item.completedSets * item.reps;
+      const volume = item.unit === "kg" ? reps * item.loadValue : 0;
+      const maxLoad = item.unit === "kg" ? item.loadValue : 0;
+
+      groups[group].sets += item.completedSets;
+      groups[group].reps += reps;
+      groups[group].volume += volume;
+      groups[group].maxLoad = Math.max(groups[group].maxLoad, maxLoad);
+
+      totals.sets += item.completedSets;
+      totals.reps += reps;
+      totals.volume += volume;
+      totals.maxLoad = Math.max(totals.maxLoad, maxLoad);
+    });
+  });
+
+  return { groups, totals };
+}
+
+function getMuscleGroup(item) {
+  const text = `${item.category || ""} ${item.name || ""}`;
+  if (/胸/.test(text)) return "胸";
+  if (/背|划船|下拉|引体/.test(text)) return "背";
+  if (/肩|推肩|侧平举|飞鸟/.test(text)) return "肩";
+  if (/臂|二头|三头|弯举|下压/.test(text)) return "手臂";
+  if (/臀/.test(text)) return "臀";
+  if (/腿|股|蹲|腿举|腿屈伸|腿弯举|小腿/.test(text)) return "腿";
+  if (/核心|腹|卷腹|平板/.test(text)) return "核心";
+  return item.category && MUSCLE_GROUPS.includes(item.category) ? item.category : "其他";
+}
+
+function getMuscleDateRange(period) {
+  const today = keyToDate(todayKey());
+  const start = new Date(today);
+  const end = new Date(today);
+
+  if (period === "week") {
+    const offset = (today.getDay() + 6) % 7;
+    start.setDate(today.getDate() - offset);
+    end.setDate(start.getDate() + 6);
+  } else if (period === "month") {
+    start.setDate(1);
+    end.setMonth(start.getMonth() + 1, 0);
+  }
+
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { start, end };
+}
+
+function formatDateRange(start, end) {
+  if (dateToKey(start) === dateToKey(end)) {
+    return `${dateToKey(start)} 今天`;
+  }
+  return `${dateToKey(start)} 至 ${dateToKey(end)}`;
+}
+
+function formatCompactDateRange(start, end) {
+  const shortKey = (date) => `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+  if (dateToKey(start) === dateToKey(end)) {
+    return `${shortKey(start)} 今天`;
+  }
+  return `${shortKey(start)}-${shortKey(end)}`;
+}
+
+function heatColor(intensity) {
+  if (intensity <= 0) return "#e3ded3";
+  const stops = [
+    [254, 202, 202],
+    [248, 113, 113],
+    [220, 38, 38],
+    [127, 29, 29]
+  ];
+  const scaled = Math.min(0.999, Math.max(0, intensity)) * (stops.length - 1);
+  const index = Math.floor(scaled);
+  const mix = scaled - index;
+  const from = stops[index];
+  const to = stops[index + 1] ?? from;
+  const channel = (i) => Math.round(from[i] + (to[i] - from[i]) * mix);
+  return `rgb(${channel(0)}, ${channel(1)}, ${channel(2)})`;
 }
 
 function renderBackupMeta() {

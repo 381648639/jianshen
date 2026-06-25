@@ -106,6 +106,7 @@
                 <option>背</option>
                 <option>肩</option>
                 <option>腿</option>
+                <option>臀</option>
                 <option>手臂</option>
                 <option>核心</option>
                 <option>其他</option>
@@ -114,6 +115,141 @@
             <button class="primary-button" type="submit">保存动作</button>
           </form>
           <div class="library-list" id="library-list"></div>
+        </section>
+
+        <section class="view" id="muscle-view" aria-labelledby="muscle-tab">
+          <div class="muscle-toolbar">
+            <div>
+              <h2>部位概览</h2>
+              <p id="muscle-range">本周</p>
+            </div>
+            <div class="segmented" aria-label="时间范围">
+              <button class="segment active" type="button" data-muscle-period="day">日</button>
+              <button class="segment" type="button" data-muscle-period="week">周</button>
+              <button class="segment" type="button" data-muscle-period="month">月</button>
+            </div>
+          </div>
+
+          <div class="metric-tabs" aria-label="热度指标">
+            <button class="metric-tab active" type="button" data-muscle-metric="sets">组数</button>
+            <button class="metric-tab" type="button" data-muscle-metric="reps">次数</button>
+            <button class="metric-tab" type="button" data-muscle-metric="volume">总重量</button>
+            <button class="metric-tab" type="button" data-muscle-metric="maxLoad">最大重量</button>
+          </div>
+
+          <div class="muscle-stats">
+            <div>
+              <dt>组数</dt>
+              <dd id="muscle-total-sets">0</dd>
+            </div>
+            <div>
+              <dt>次数</dt>
+              <dd id="muscle-total-reps">0</dd>
+            </div>
+            <div>
+              <dt>总重量</dt>
+              <dd id="muscle-total-volume">0 kg</dd>
+            </div>
+            <div>
+              <dt>最大重量</dt>
+              <dd id="muscle-max-load">0 kg</dd>
+            </div>
+          </div>
+
+          <section class="muscle-card" aria-label="肌肉结构热力图">
+            <div class="muscle-map-host" id="muscle-map-host"></div>
+            <svg class="muscle-map" viewBox="0 0 760 650" role="img" aria-label="部位训练热力图">
+              <title>部位概览</title>
+              <rect class="map-panel" x="8" y="8" width="744" height="634" rx="26" />
+              <text class="map-caption" x="44" y="70">人体肌肉的部位训练概况。</text>
+              <text class="map-date" id="muscle-map-range" x="716" y="128">本周</text>
+
+              <g class="figure front" transform="translate(210 122)">
+                <path class="body-silhouette" d="M70 0c-25 0-42 18-42 44 0 17 9 31 23 39v19l-43 16-23 62-34 82 22 11 42-64 11-38 10 96-18 134h33l19-108 19 108h33l-18-134 10-96 11 38 42 64 22-11-34-82-23-62-43-16V83c14-8 23-22 23-39 0-26-17-44-42-44z" />
+                <circle class="body-head" cx="70" cy="44" r="34" />
+                <path class="muscle-shape" data-muscle="肩" d="M13 121c-19 2-35 17-40 47 17 4 34-3 48-23l14-23c-7-2-14-3-22-1z" />
+                <path class="muscle-shape" data-muscle="肩" d="M127 121c19 2 35 17 40 47-17 4-34-3-48-23l-14-23c7-2 14-3 22-1z" />
+                <path class="muscle-shape" data-muscle="胸" d="M17 126c24-13 52-5 53 28v39c-33-2-58-14-70-36 2-13 8-23 17-31z" />
+                <path class="muscle-shape" data-muscle="胸" d="M123 126c-24-13-52-5-53 28v39c33-2 58-14 70-36-2-13-8-23-17-31z" />
+                <path class="muscle-shape" data-muscle="核心" d="M35 198h70l-9 88H44l-9-88z" />
+                <path class="muscle-detail" d="M70 198v88M39 222h62M42 248h56M47 274h46" />
+                <path class="muscle-shape" data-muscle="手臂" d="M-31 181c17 3 27 13 28 30l-14 67c-15 6-29 0-34-14l10-55 10-28z" />
+                <path class="muscle-shape" data-muscle="手臂" d="M171 181c-17 3-27 13-28 30l14 67c15 6 29 0 34-14l-10-55-10-28z" />
+                <path class="muscle-shape" data-muscle="腿" d="M32 292c24 4 35 21 33 55L51 401H17l5-62 10-47z" />
+                <path class="muscle-shape" data-muscle="腿" d="M108 292c-24 4-35 21-33 55l14 54h34l-5-62-10-47z" />
+              </g>
+
+              <g class="figure back" transform="translate(520 122)">
+                <path class="body-silhouette" d="M70 0c-25 0-42 18-42 44 0 17 9 31 23 39v19l-43 16-23 62-34 82 22 11 42-64 11-38 10 96-18 134h33l19-108 19 108h33l-18-134 10-96 11 38 42 64 22-11-34-82-23-62-43-16V83c14-8 23-22 23-39 0-26-17-44-42-44z" />
+                <circle class="body-head" cx="70" cy="44" r="34" />
+                <path class="muscle-shape" data-muscle="肩" d="M13 121c-19 2-35 17-40 47 17 4 34-3 48-23l14-23c-7-2-14-3-22-1z" />
+                <path class="muscle-shape" data-muscle="肩" d="M127 121c19 2 35 17 40 47-17 4-34-3-48-23l-14-23c7-2 14-3 22-1z" />
+                <path class="muscle-shape" data-muscle="背" d="M23 120c24 12 42 34 47 68v96c-42-30-66-69-75-119 6-18 15-34 28-45z" />
+                <path class="muscle-shape" data-muscle="背" d="M117 120c-24 12-42 34-47 68v96c42-30 66-69 75-119-6-18-15-34-28-45z" />
+                <path class="muscle-detail" d="M70 106v184M27 152c25 24 38 54 43 88M113 152c-25 24-38 54-43 88" />
+                <path class="muscle-shape" data-muscle="手臂" d="M-31 181c17 3 27 13 28 30l-14 67c-15 6-29 0-34-14l10-55 10-28z" />
+                <path class="muscle-shape" data-muscle="手臂" d="M171 181c-17 3-27 13-28 30l14 67c15 6 29 0 34-14l-10-55-10-28z" />
+                <path class="muscle-shape" data-muscle="臀" d="M31 280c24-11 38-2 39 21-7 23-23 36-48 40-13-20-10-41 9-61z" />
+                <path class="muscle-shape" data-muscle="臀" d="M109 280c-24-11-38-2-39 21 7 23 23 36 48 40 13-20 10-41-9-61z" />
+                <path class="muscle-shape" data-muscle="腿" d="M32 334c24 3 35 18 33 48l-6 19H17l6-38 9-29z" />
+                <path class="muscle-shape" data-muscle="腿" d="M108 334c-24 3-35 18-33 48l6 19h42l-6-38-9-29z" />
+              </g>
+
+              <g class="map-labels">
+                <path class="label-line" d="M170 178H90L70 160" />
+                <text class="label-title" x="46" y="150">胸</text>
+                <text class="label-value" x="46" y="170" data-muscle-value="胸">0组</text>
+                <text class="label-sub" x="46" y="188" data-muscle-sub="胸">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M160 252H88L68 235" />
+                <text class="label-title" x="46" y="228">手臂</text>
+                <text class="label-value" x="46" y="248" data-muscle-value="手臂">0组</text>
+                <text class="label-sub" x="46" y="266" data-muscle-sub="手臂">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M236 338H116L92 360" />
+                <text class="label-title" x="46" y="356">核心</text>
+                <text class="label-value" x="46" y="376" data-muscle-value="核心">0组</text>
+                <text class="label-sub" x="46" y="394" data-muscle-sub="核心">0次 / 0kg / 0kg</text>
+
+                <path class="label-line muted" d="M218 492H116L82 532" />
+                <text class="label-title muted" x="46" y="526">腿</text>
+                <text class="label-value muted" x="46" y="546" data-muscle-value="腿">0组</text>
+                <text class="label-sub muted" x="46" y="564" data-muscle-sub="腿">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M320 164h50l26-34" />
+                <text class="label-title right" x="430" y="118">肩</text>
+                <text class="label-value right" x="430" y="138" data-muscle-value="肩">0组</text>
+                <text class="label-sub right" x="430" y="156" data-muscle-sub="肩">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M500 174h-70l-30-34" />
+                <text class="label-title" x="392" y="178">背</text>
+                <text class="label-value" x="392" y="198" data-muscle-value="背">0组</text>
+                <text class="label-sub" x="392" y="216" data-muscle-sub="背">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M648 154h56l22-22" />
+                <text class="label-title right" x="724" y="118">肩</text>
+                <text class="label-value right" x="724" y="138" data-muscle-value="肩">0组</text>
+                <text class="label-sub right" x="724" y="156" data-muscle-sub="肩">0次 / 0kg / 0kg</text>
+
+                <path class="label-line" d="M654 268h58" />
+                <text class="label-title right" x="724" y="250">手臂</text>
+                <text class="label-value right" x="724" y="270" data-muscle-value="手臂">0组</text>
+                <text class="label-sub right" x="724" y="288" data-muscle-sub="手臂">0次 / 0kg / 0kg</text>
+
+                <path class="label-line muted" d="M610 410h74l30 44" />
+                <text class="label-title muted right" x="724" y="450">臀</text>
+                <text class="label-value muted right" x="724" y="470" data-muscle-value="臀">0组</text>
+                <text class="label-sub muted right" x="724" y="488" data-muscle-sub="臀">0次 / 0kg / 0kg</text>
+              </g>
+
+              <text class="figure-name" x="280" y="570">正面</text>
+              <text class="figure-name" x="590" y="570">背面</text>
+              <text class="legend-text" x="584" y="612">少</text>
+              <rect class="legend-low" x="616" y="596" width="22" height="20" rx="2" />
+              <rect class="legend-high" x="640" y="596" width="22" height="20" rx="2" />
+              <text class="legend-text" x="676" y="612">多</text>
+            </svg>
+          </section>
         </section>
 
         <section class="view" id="backup-view" aria-labelledby="backup-tab">
@@ -143,6 +279,7 @@
         <button class="tab active" id="today-tab" type="button" data-view="today-view">今日</button>
         <button class="tab" id="calendar-tab" type="button" data-view="calendar-view">日历</button>
         <button class="tab" id="library-tab" type="button" data-view="library-view">动作库</button>
+        <button class="tab" id="muscle-tab" type="button" data-view="muscle-view">部位</button>
         <button class="tab" id="backup-tab" type="button" data-view="backup-view">备份</button>
       </nav>
     </div>
